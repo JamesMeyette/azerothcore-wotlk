@@ -32,6 +32,7 @@
 enum MageSpells
 {
     // Ours
+    SPELL_MAGE_PYROBLAST_TRIGGER                 = 944449,
     SPELL_MAGE_BURNOUT_TRIGGER                   = 44450,
     SPELL_MAGE_IMPROVED_BLIZZARD_CHILLED         = 12486,
     SPELL_MAGE_COMBUSTION                        = 11129,
@@ -84,7 +85,7 @@ class spell_mage_fireball : public SpellScript
         // If the random number is less than 30, triggers the Pyroblast
         if (randomNumber < 30)
         {
-            std::cout << "Casting Pyroblast" << std::endl;
+            //std::cout << "Casting Pyroblast" << std::endl;
             GetCaster()->CastSpell(GetCaster(), _triggerSpellId, TRIGGERED_FULL_MASK);
         }
     }
@@ -92,10 +93,10 @@ class spell_mage_fireball : public SpellScript
     bool Load() override
     {
         _baseSpellId = SPELL_MAGE_FIREBALL;
-        _triggerSpellId = SPELL_MAGE_PYROBLAST;   
+        _triggerSpellId = SPELL_MAGE_PYROBLAST_TRIGGER;   
 
         // Add debug log here
-        std::cout << "Loaded spell_mage_fireball with baseSpellId:" << _baseSpellId << " and triggerSpellId:" << _triggerSpellId << std::endl;
+        //std::cout << "Loaded spell_mage_fireball with baseSpellId:" << _baseSpellId << " and triggerSpellId:" << _triggerSpellId << std::endl;
 
         return true;
     }
