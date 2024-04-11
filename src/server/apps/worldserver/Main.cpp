@@ -59,6 +59,7 @@
 #include <iostream>
 #include <openssl/crypto.h>
 #include <openssl/opensslv.h>
+#include <fstream>
 
 #if AC_PLATFORM == AC_PLATFORM_WINDOWS
 #include "ServiceWin32.h"
@@ -382,6 +383,11 @@ int main(int argc, char** argv)
         LOG_INFO("server.worldserver", "Starting up anti-freeze thread ({} seconds max stuck time)...", coreStuckTime);
     }
 
+    std::ofstream logFile("ReadyLog.txt", std::ios_base::app);
+    if (logFile.is_open()) {
+        logFile << GitRevision::GetFullVersion() << " (worldserver-daemon) ready...\n";
+        logFile.close();
+    }
     LOG_INFO("server.worldserver", "{} (worldserver-daemon) ready...", GitRevision::GetFullVersion());
 
     sScriptMgr->OnStartup();

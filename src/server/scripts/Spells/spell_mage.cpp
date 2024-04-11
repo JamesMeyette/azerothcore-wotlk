@@ -55,7 +55,62 @@ enum MageSpells
     SPELL_MAGE_SUMMON_WATER_ELEMENTAL_PERMANENT  = 70908,
     SPELL_MAGE_SUMMON_WATER_ELEMENTAL_TEMPORARY  = 70907,
     SPELL_MAGE_GLYPH_OF_BLAST_WAVE               = 62126,
-    SPELL_MAGE_FINGERS_OF_FROST                  = 44543
+    SPELL_MAGE_FINGERS_OF_FROST                  = 44543,
+    SPELL_MAGE_FIREBALL                          = 133,
+    SPELL_MAGE_PYROBLAST                         = 11366
+};
+
+/* 
+Goal: Fireball successfuly casts Pyroblast with 30% chance.
+I think with this I need to implement a "Medium Spell something akin to "SPELL_MAGE_BURNOUT_TRIGGER.. 
+so Fireball will have a chance to trigger that spell, and that spell triggers Pyroblast
+
+Also be sure to look at Burnout = 44450 in WoW Spell Editor looking at the spell masking section I may need to do something with
+that in order to get this to work properly.
+*/
+
+class spell_mage_fireball : public SpellScript
+{
+    PrepareSpellScript(spell_mage_fireball);
+
+    void HandleAfterCast()
+    {
+        // Generates a random number (between 0 to 99 here)
+        const int randomNumber = rand() % 100;
+
+        // Add debug log here
+        //LOG_INFO("Random Number: " + randomNumber);
+
+        // If the random number is less than 30, triggers the Pyroblast
+        if (randomNumber < 30)
+        {
+            std::cout << "Casting Pyroblast" << std::endl;
+            GetCaster()->CastSpell(GetCaster(), _triggerSpellId, TRIGGERED_FULL_MASK);
+        }
+    }
+
+    bool Load() override
+    {
+        _baseSpellId = SPELL_MAGE_FIREBALL;
+        _triggerSpellId = SPELL_MAGE_PYROBLAST;   
+
+        // Add debug log here
+        std::cout << "Loaded spell_mage_fireball with baseSpellId:" << _baseSpellId << " and triggerSpellId:" << _triggerSpellId << std::endl;
+
+        return true;
+    }
+
+    void Register() override
+    {
+        // Add debug log here
+        std::cout << "Registering spell_mage_fireball" << std::endl;
+
+        AfterCast += SpellCastFn(spell_mage_fireball::HandleAfterCast);
+    }
+
+private:
+    uint32 _triggerSpellId;
+    uint32 _baseSpellId;
 };
 
 class spell_mage_arcane_blast : public SpellScript

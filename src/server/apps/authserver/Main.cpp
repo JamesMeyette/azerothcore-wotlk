@@ -59,7 +59,7 @@ using namespace boost::program_options;
 namespace fs = std::filesystem;
 
 bool StartDB();
-void StopDB();
+void stop_db();
 void SignalHandler(std::weak_ptr<Acore::Asio::IoContext> ioContextRef, boost::system::error_code const& error, int signalNumber);
 void KeepDatabaseAliveHandler(std::weak_ptr<Acore::Asio::DeadlineTimer> dbPingTimerRef, int32 dbPingInterval, boost::system::error_code const& error);
 void BanExpiryHandler(std::weak_ptr<Acore::Asio::DeadlineTimer> banExpiryCheckTimerRef, int32 banExpiryCheckInterval, boost::system::error_code const& error);
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
     // Load IP Location Database
     sIPLocation->Load();
 
-    std::shared_ptr<void> dbHandle(nullptr, [](void*) { StopDB(); });
+    std::shared_ptr<void> dbHandle(nullptr, [](void*) { stop_db(); });
 
     std::shared_ptr<Acore::Asio::IoContext> ioContext = std::make_shared<Acore::Asio::IoContext>();
 
@@ -222,7 +222,7 @@ bool StartDB()
 }
 
 /// Close the connection to the database
-void StopDB()
+void stop_db()
 {
     LoginDatabase.Close();
     MySQL::Library_End();
